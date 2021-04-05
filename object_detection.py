@@ -5,6 +5,7 @@ import time
 import cv2
 import os
 import json
+import base64
 
 # construct the argument parse and parse the arguments
 confthres = 0.3
@@ -119,7 +120,7 @@ def do_prediction(image,net,LABELS):
             #     '''.format(LABELS[classIDs[i]], confidences[i], boxes[i][3], boxes[i][0], boxes[i][1] + boxes[i][3], boxes[i][2])
             # )
             objects[i] = {}
-            objects[i]["abel"] = LABELS[classIDs[i]]
+            objects[i]["label"] = LABELS[classIDs[i]]
             objects[i]["accuracy"] = confidences[i]
             objects[i]["rectangle"] = {}
             objects[i]["rectangle"]["height"] = boxes[i][3]
@@ -157,6 +158,16 @@ Weights=get_weights(wpath)
 def main():
     try:
         imagefile = str(sys.argv[2])
+        with open (imagefile, 'rb') as image_file:
+            image = base64.b64encode(image_file.read()).decode('utf-8')
+        img = image.encode('utf-8')
+        image_binary = base64.b64decode(img)
+        nparr = np.fromstring(image_binary, np.uint8)
+        img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        print (type(img_np)) 
+        # with open ('decoded_image.png', 'wb') as file_to_save:
+        #     file_to_save.write(image_binary)
+        print (image_binary)
         img = cv2.imread(imagefile)
         npimg=np.array(img)
         image=npimg.copy()

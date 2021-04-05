@@ -6,9 +6,13 @@ import sys
 import time
 import cv2
 import os
+import base64
+import io
+from PIL import Image
 
 app = Flask(__name__)
 api = Api(app)
+app.config["JSON_SORT_KEYS"] = False
 
 # construct the argument parse and parse the arguments
 confthres = 0.3
@@ -21,7 +25,6 @@ def get_labels(labels_path):
     #print(yolo_path)
     LABELS = open(lpath).read().strip().split("\n")
     return LABELS
-
 
 def get_weights(weights_path):
     # derive the paths to the YOLO weights and model configuration
@@ -103,13 +106,12 @@ def do_prediction(image,net,LABELS):
 
     objects = {}
     arr = []
-    # TODO Prepare the output as required to the assignment specification
     # ensure at least one detection exists
     if len(idxs) > 0:
         # loop over the indexes we are keeping
         for i in idxs.flatten():
             objects[i] = {}
-            objects[i]["abel"] = LABELS[classIDs[i]]
+            objects[i]["label"] = LABELS[classIDs[i]]
             objects[i]["accuracy"] = confidences[i]
             objects[i]["rectangle"] = {}
             objects[i]["rectangle"]["height"] = boxes[i][3]
@@ -117,46 +119,45 @@ def do_prediction(image,net,LABELS):
             objects[i]["rectangle"]["top"] = boxes[i][1] + boxes[i][3]
             objects[i]["rectangle"]["width"] = boxes[i][2]
             arr.append(objects[i])
-            # print("detected item:{}, accuracy:{}, X:{}, Y:{}, width:{}, height:{}".format(LABELS[classIDs[i]],
-            #                                                                                  confidences[i],
-            #                                                                                  boxes[i][0],
-            #                                                                                  boxes[i][1],
-            #                                                                                  boxes[i][2],
-            #                                                                                  boxes[i][3]))
     return arr
-
-
-yolo_path  = "yolo_tiny_configs"
-
-## Yolov3-tiny versrion
-labelsPath= "coco.names"
-cfgpath= "yolov3-tiny.cfg"
-wpath= "yolov3-tiny.weights"
-
-Lables=get_labels(labelsPath)
-CFG=get_config(cfgpath)
-Weights=get_weights(wpath)
-
 
 @app.route('/api/object_detection', methods=['POST'])
 def main():
     try:
-        imagefile = json.loads(request.json)['image']
+        # yolo_path  = "yolo_tiny_configs/"
+        
+        # ## Yolov3-tiny versrion
+        # labelsPath= "coco.names"
+        # cfgpath= "yolov3-tiny.cfg"
+        # wpath= "yolov3-tiny.weights"
+
+        # Lables=get_labels(labelsPath)
+        # CFG=get_config(cfgpath)
+        # Weights=get_weights(wpath)
+
+        # base64_imagefile = json.loads(request.json)['image']
+        # base64_img_bytes = base64_imagefile.encode('utf-8')
+        # decoded_imagefile_data = base64.decodebytes(base64_img_bytes)
+        # nparr = np.fromstring(decoded_imagefile_data, np.uint8) 
+        # npimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         # imagefile = request.files["image"].read()
         # image = Image.open(BytesIO(imagefile))
-        img = cv2.imread(imagefile)
-        npimg = np.array(img)
-        image = npimg.copy()
-        image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        # img = cv2.imread(decoded_imagefile)
+        # img = request.files['image'].read()
+        # image = Image.open(io.BytesIO(img))
+        # npimg = np.array(img)
+        # image = npimg.copy()
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # load the neural net.  Should be local to this method as its multi-threaded endpoint
         # nets = load_model(CFG, Weights)
         # object_arr = do_prediction(image, nets, Lables)
         
-        result = {}
-        result["id"] = imgae_id
-        result["objects"] = object_arr
+        # result = {}
+        # result["id"] = imgae_id
+        # result["objects"] = object_arr
         image_id = json.loads(request.json)['id']
-        return result
+        # return json.dumps(result, indent=2)
+        return image_id
 
     except Exception as e:
         print("Exception  {}".format(e))
@@ -172,4 +173,4 @@ def main():
 # api.add_resource(Image, "/api/object_detection")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, port=5000, threaded=True)
