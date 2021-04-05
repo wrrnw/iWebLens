@@ -7,17 +7,16 @@ import requests
 import threading
 import uuid
 import base64
-import  json
+import json
 import os
 
 #send http request
-def call_object_detection_service( image):
+def call_object_detection_service(image):
     try:
-
         url = str(sys.argv[2])
         data = {}
         #generate uuid for image
-        id =   uuid.uuid5(uuid.NAMESPACE_OID, image)
+        id = uuid.uuid5(uuid.NAMESPACE_OID, image)
         # Encode image into base64 string
         with open (image, 'rb') as image_file:
             data['image'] =  base64.b64encode(image_file.read()).decode('utf-8')
@@ -25,7 +24,7 @@ def call_object_detection_service( image):
         data ['id'] = str(id)
         headers = {'Content-Type': 'application/json'}
 
-        response = requests.post(url, json= json.dumps(data), headers = headers)
+        response = requests.post(url, json = json.dumps(data), headers = headers)
 
         if response.ok:
             output = "Thread : {},  input image: {},  output:{}".format(threading.current_thread().getName(),
