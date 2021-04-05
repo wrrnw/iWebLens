@@ -25,5 +25,5 @@ python3 iWebLens_client.py <inputfolder> <endpoint> <num_threads>
 Here, **inputfolder** represents the folder that contains images for the test. The **endpoint** is the **REST API URL** and **num_threads** indicates the total number of threads sending requests to the server concurrently. 
 For example:
 ```
-python3 iWebLens_client.py inputfolder/ http://127.0.0.1:5000/api/object_detection 16
+python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
 ```
