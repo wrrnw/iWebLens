@@ -1,5 +1,5 @@
 ## Usage
-### To run on local machine without Docker on Mac OS
+### To run on local machine without Docker installed on Mac OS
 Make sure you have **Python 3.5 or higher** and **pip** installed:
 ``` 
 python3 --version
@@ -44,7 +44,7 @@ docker ps
 ```
 and then insert the container_id you get from the previous command
 ```
-docker exec -it <container_id>
+docker exec -it <container_id> sh
 ```
 Test
 ```
