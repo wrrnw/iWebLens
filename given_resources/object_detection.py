@@ -4,8 +4,6 @@ import sys
 import time
 import cv2
 import os
-import json
-import base64
 
 # construct the argument parse and parse the arguments
 confthres = 0.3
@@ -18,6 +16,7 @@ def get_labels(labels_path):
     print(yolo_path)
     LABELS = open(lpath).read().strip().split("\n")
     return LABELS
+
 
 def get_weights(weights_path):
     # derive the paths to the YOLO weights and model configuration
@@ -35,6 +34,7 @@ def load_model(configpath,weightspath):
     return net
 
 def do_prediction(image,net,LABELS):
+
     (H, W) = image.shape[:2]
     # determine only the *output* layer names that we need from YOLO
     ln = net.getLayerNames()
@@ -90,51 +90,25 @@ def do_prediction(image,net,LABELS):
                 # update our list of bounding box coordinates, confidences,
                 # and class IDs
                 boxes.append([x, y, int(width), int(height)])
+
                 confidences.append(float(confidence))
                 classIDs.append(classID)
-                
 
     # apply non-maxima suppression to suppress weak, overlapping bounding boxes
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, confthres,
                             nmsthres)
 
     # TODO Prepare the output as required to the assignment specification
-    objects = {}
-    arr = []
     # ensure at least one detection exists
     if len(idxs) > 0:
         # loop over the indexes we are keeping
         for i in idxs.flatten():
-            # arr.append('''
-            #     {
-            #         "label": "{}",
-            #         "accuracy": {},
-            #         "rectangle": 
-            #             {
-            #                 "height": {},
-            #                 "left": {},
-            #                 "top": {},
-            #                 "width": {}
-            #             }
-            #     }
-            #     '''.format(LABELS[classIDs[i]], confidences[i], boxes[i][3], boxes[i][0], boxes[i][1] + boxes[i][3], boxes[i][2])
-            # )
-            objects[i] = {}
-            objects[i]["label"] = LABELS[classIDs[i]]
-            objects[i]["accuracy"] = confidences[i]
-            objects[i]["rectangle"] = {}
-            objects[i]["rectangle"]["height"] = boxes[i][3]
-            objects[i]["rectangle"]["left"] = boxes[i][0]
-            objects[i]["rectangle"]["top"] = boxes[i][1] + boxes[i][3]
-            objects[i]["rectangle"]["width"] = boxes[i][2]
-            arr.append(objects[i])
             print("detected item:{}, accuracy:{}, X:{}, Y:{}, width:{}, height:{}".format(LABELS[classIDs[i]],
-                                                                                            confidences[i],
-                                                                                            boxes[i][0],
-                                                                                            boxes[i][1],
-                                                                                            boxes[i][2],
-                                                                                            boxes[i][3]))
-        print (json.dumps(arr, indent=2))
+                                                                                             confidences[i],
+                                                                                             boxes[i][0],
+                                                                                             boxes[i][1],
+                                                                                             boxes[i][2],
+                                                                                             boxes[i][3]))
 
 
 ## argument
@@ -158,16 +132,6 @@ Weights=get_weights(wpath)
 def main():
     try:
         imagefile = str(sys.argv[2])
-        with open (imagefile, 'rb') as image_file:
-            image = base64.b64encode(image_file.read()).decode('utf-8')
-        img = image.encode('utf-8')
-        image_binary = base64.b64decode(img)
-        nparr = np.fromstring(image_binary, np.uint8)
-        img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        print (type(img_np)) 
-        # with open ('decoded_image.png', 'wb') as file_to_save:
-        #     file_to_save.write(image_binary)
-        print (image_binary)
         img = cv2.imread(imagefile)
         npimg=np.array(img)
         image=npimg.copy()
@@ -178,6 +142,7 @@ def main():
 
 
     except Exception as e:
+
         print("Exception  {}".format(e))
 
 if __name__ == '__main__':
