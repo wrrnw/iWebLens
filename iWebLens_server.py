@@ -152,7 +152,7 @@ def main():
         result = {}
         result["id"] = image_id
         result["objects"] = object_arr
-        return json.dumps(result, indent=2)
+        return "\n" + json.dumps(result, indent=2)
         # return image_id#request.files
 
     except Exception as e:
