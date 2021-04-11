@@ -18,6 +18,8 @@ app.config["JSON_SORT_KEYS"] = False
 confthres = 0.3
 nmsthres = 0.1
 
+yolo_path  = "yolo_tiny_configs/"
+
 def get_labels(labels_path):
     # load the COCO class labels our YOLO model was trained on
     lpath=os.path.sep.join([yolo_path, labels_path])
@@ -121,43 +123,37 @@ def do_prediction(image,net,LABELS):
             arr.append(objects[i])
     return arr
 
+
 @app.route('/api/object_detection', methods=['POST'])
 def main():
     try:
-        # yolo_path  = "yolo_tiny_configs/"
+        ## Yolov3-tiny versrion
+        labelsPath= "coco.names"
+        cfgpath= "yolov3-tiny.cfg"
+        wpath= "yolov3-tiny.weights"
+
+        Lables=get_labels(labelsPath)
+        CFG=get_config(cfgpath)
+        Weights=get_weights(wpath)
+
+        base64_imagefile = json.loads(request.json)['image']
+        base64_img_bytes = base64_imagefile.encode('utf-8')
+        decoded_imagefile_data = base64.decodebytes(base64_img_bytes)
+        nparr = np.fromstring(decoded_imagefile_data, np.uint8) 
+        npimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        image = npimg.copy()
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
-        # ## Yolov3-tiny versrion
-        # labelsPath= "coco.names"
-        # cfgpath= "yolov3-tiny.cfg"
-        # wpath= "yolov3-tiny.weights"
-
-        # Lables=get_labels(labelsPath)
-        # CFG=get_config(cfgpath)
-        # Weights=get_weights(wpath)
-
-        # base64_imagefile = json.loads(request.json)['image']
-        # base64_img_bytes = base64_imagefile.encode('utf-8')
-        # decoded_imagefile_data = base64.decodebytes(base64_img_bytes)
-        # nparr = np.fromstring(decoded_imagefile_data, np.uint8) 
-        # npimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        # imagefile = request.files["image"].read()
-        # image = Image.open(BytesIO(imagefile))
-        # img = cv2.imread(decoded_imagefile)
-        # img = request.files['image'].read()
-        # image = Image.open(io.BytesIO(img))
-        # npimg = np.array(img)
-        # image = npimg.copy()
-        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # load the neural net.  Should be local to this method as its multi-threaded endpoint
-        # nets = load_model(CFG, Weights)
-        # object_arr = do_prediction(image, nets, Lables)
-        
-        # result = {}
-        # result["id"] = image_id
-        # result["objects"] = object_arr
+        nets = load_model(CFG, Weights)
+        object_arr = do_prediction(image, nets, Lables)
         image_id = json.loads(request.json)['id']
-        # return json.dumps(result, indent=2)
-        return request.files
+
+        result = {}
+        result["id"] = image_id
+        result["objects"] = object_arr
+        return json.dumps(result, indent=2)
+        # return image_id#request.files
 
     except Exception as e:
         print("Exception  {}".format(e))
