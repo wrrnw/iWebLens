@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
-from flask_restful import Api, Resource, reqparse, abort
+from flask import Flask, request
+from flask_restful import Api
 import json
 import numpy as np
 import sys
@@ -7,8 +7,7 @@ import time
 import cv2
 import os
 import base64
-import io
-from PIL import Image
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -120,7 +119,7 @@ def do_prediction(image,net,LABELS):
             objects[i]["rectangle"]["left"] = boxes[i][0]
             objects[i]["rectangle"]["top"] = boxes[i][1] + boxes[i][3]
             objects[i]["rectangle"]["width"] = boxes[i][2]
-            arr.append(objects[i])
+            objects_arr.append(objects[i])
     return objects_arr
 
 
