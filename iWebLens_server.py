@@ -153,11 +153,11 @@ def main():
         # object_arr = do_prediction(image, nets, Lables)
         
         # result = {}
-        # result["id"] = imgae_id
+        # result["id"] = image_id
         # result["objects"] = object_arr
         image_id = json.loads(request.json)['id']
         # return json.dumps(result, indent=2)
-        return image_id
+        return request.files
 
     except Exception as e:
         print("Exception  {}".format(e))
