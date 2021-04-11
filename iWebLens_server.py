@@ -107,8 +107,8 @@ def do_prediction(image,net,LABELS):
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, confthres, nmsthres)
 
     objects = {}
-    arr = []
-    # ensure at least one detection exists
+    objects_arr = []
+    # ensure at least one detection exists. if not, the object array will be empty
     if len(idxs) > 0:
         # loop over the indexes we are keeping
         for i in idxs.flatten():
@@ -121,7 +121,7 @@ def do_prediction(image,net,LABELS):
             objects[i]["rectangle"]["top"] = boxes[i][1] + boxes[i][3]
             objects[i]["rectangle"]["width"] = boxes[i][2]
             arr.append(objects[i])
-    return arr
+    return objects_arr
 
 
 @app.route('/api/object_detection', methods=['POST'])
@@ -136,6 +136,7 @@ def main():
         CFG=get_config(cfgpath)
         Weights=get_weights(wpath)
 
+        # Decode the base64 image file
         base64_imagefile = json.loads(request.json)['image']
         base64_img_bytes = base64_imagefile.encode('utf-8')
         decoded_imagefile_data = base64.decodebytes(base64_img_bytes)
@@ -144,29 +145,19 @@ def main():
         image = npimg.copy()
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
-        # load the neural net.  Should be local to this method as its multi-threaded endpoint
+        # load the neural net. Should be local to this method as its multi-threaded endpoint
         nets = load_model(CFG, Weights)
         object_arr = do_prediction(image, nets, Lables)
         image_id = json.loads(request.json)['id']
 
+        # format and return the result
         result = {}
         result["id"] = image_id
         result["objects"] = object_arr
         return "\n" + json.dumps(result, indent=4)
-        # return image_id#request.files
 
     except Exception as e:
         print("Exception  {}".format(e))
-
-# class Image(Resource):
-#   def post(self):
-#     image_id = json.loads(request.json)['id']
-#     #result = json.dumps('{"id": {}, "object": [{"label": "book"}]}'.format(image_id))
-#     #image = Image.open(ByteIO(i))
-#     #image = np.array(image)
-#           #request.get_json()
-#     return image_id
-# api.add_resource(Image, "/api/object_detection")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=5000, threaded=True)
