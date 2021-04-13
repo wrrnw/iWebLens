@@ -1,4 +1,5 @@
 ## Usage
+---
 ### To run on local machine without Docker installed on Mac OS
 Make sure you have **Python 3.5 or higher** and **pip** installed:
 ``` 
@@ -10,15 +11,15 @@ Update and install package:
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
-Test detection with a sample image:
+Test detection with a sample image, make sure you are in the project folder and run:
 ```
-python3 object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
+python3 given_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
 ```
 To setup a server:
 ```
 python3 iWebLens_server.py
 ```
-Run detection with thread:
+Keep the server terminal open and open another terminal, run detection with thread:
 ```
 python3 iWebLens_client.py <inputfolder> <endpoint> <num_threads>
 ```
@@ -27,7 +28,41 @@ For example:
 ```
 python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
 ```
-
+---
+### To run on local machine without Docker installed on Ubuntu 18.04
+Firstly, install **python 3.5 or higher**, **pip** and **opencv**
+```
+sudo apt-get update
+sudo apt-get install -y python python3-pip python3-opencv
+```
+Make sure you have successfully install the packages
+```
+python3 --version
+pip3 --version
+```
+Update and install python libraries:
+```
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+```
+Test detection with a sample image, make sure you are in the project folder and run:
+```
+python3 given_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
+```
+To setup a server:
+```
+python3 iWebLens_server.py
+```
+Keep the server terminal open and open another terminal, run detection with thread:
+```
+python3 iWebLens_client.py <inputfolder> <endpoint> <num_threads>
+```
+Here, **inputfolder** represents the folder that contains images for the test. The **endpoint** is the **REST API URL** and **num_threads** indicates the total number of threads sending requests to the server concurrently. 
+For example:
+```
+python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
+```
+---
 ### To run on local machine with Docker installed
 Fisrtly, open up a terminal and change directory into the iWebLens <br>
 Then, build the iWebLens docker image by:
