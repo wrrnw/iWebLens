@@ -1,4 +1,6 @@
 ## Usage
+
+
 ---
 ### To run on local machine without Docker installed on Mac OS
 Make sure you have **Python 3.5 or higher** and **pip** installed:
@@ -28,6 +30,8 @@ For example:
 ```
 python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
 ```
+
+
 ---
 ### To run on local machine without Docker installed on Ubuntu 18.04
 Firstly, install **python 3.5 or higher**, **pip** and **opencv**
@@ -62,6 +66,8 @@ For example:
 ```
 python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
 ```
+
+
 ---
 ### To run on local machine with Docker installed
 Fisrtly, open up a terminal and change directory into the iWebLens <br>
