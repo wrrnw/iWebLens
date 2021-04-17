@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iweblens
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iweblens
+  template:
+    metadata:
+      labels:
+        app: iweblens
+    spec:
+      containers:
+      - name: iweblens
+        image: iweblens
+        ports:
+        - containerPort: 30001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iweblens-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: iweblens
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30001
