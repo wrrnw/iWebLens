@@ -156,7 +156,7 @@ To see if the pods and services created successfully:
 sudo kubectl get all -o wide
 ```
 
-To scale up or scale down the number of the pods in the deployment:
+To scale the number of the pods in the deployment:
 ```
 kubectl scale deployment iweblens-deployment --replicas=4
 ```
