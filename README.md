@@ -14,10 +14,10 @@ pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
 
-Test detection with a sample image, make sure you are in the project folder and run:
+<!-- Test detection with a sample image, make sure you are in the project folder and run:
 ```
 python3 given_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
-```
+``` -->
 
 To setup a server:
 ```
@@ -104,7 +104,7 @@ and then insert the container_id you get from the previous command
 docker exec -it <container_id> sh
 ```
 
-Test
+Test:
 ```
 python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection 16
 ```
@@ -158,8 +158,14 @@ sudo kubectl get all -o wide
 
 To scale the number of the pods in the deployment:
 ```
-kubectl scale deployment iweblens-deployment --replicas=4
+kubectl scale deployment iweblens-deployment --replicas=2
 ```
+
+If you wanna deploy the application into cloud and access externally (for example, access using aws instance ip), Make sure you've followed the previous steps to set up a ubuntu machine with package installed in your cloud instance. And you've already set up the security group to open the port 30000 of your instance. After opening the port, your should be able to access the iWebLens service from your own machine using the instance ip address:
+```
+python3 iWebLens_client.py inputfolder/ http://<instance ip>:30000/api/object_detection 16
+```
+
 
 To delete the created deployment and service:
 ```
