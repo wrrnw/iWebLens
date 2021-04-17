@@ -1,7 +1,10 @@
 private_resources/
 inputfolder/
+.git/
 README.md
 .gitignore
+.dockerignore
+.DS_Store
 Dockerfile
 iWebLens_client.py
 k8s-config.yaml
