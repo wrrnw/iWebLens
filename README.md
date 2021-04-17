@@ -136,9 +136,9 @@ Check if it is installed successfully:
 kubectl version --client
 ```
 
-Create a cluster with pre-built node image:
+Create a cluster with pre-built node image and customised configuration file:
 ```
-sudo kind create cluster
+sudo kind create cluster --config kind-config.yaml
 ```
 
 To get the cluster info:
