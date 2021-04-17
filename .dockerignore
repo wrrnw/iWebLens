@@ -1,3 +1,5 @@
 given_resources/
 README.md
 .gitignore
+k8s-config.yaml
+kind-config.yaml
