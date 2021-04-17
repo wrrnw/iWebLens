@@ -141,12 +141,32 @@ Create a cluster with pre-built node image and customised configuration file:
 sudo kind create cluster --config kind-config.yaml
 ```
 
-To get the cluster info:
+To get the nodes info:
 ```
-sudo kubectl get all
+sudo kubectl get nodes -o wide
 ```
 
-Delete the cluster:
+Create Deployment and Service using customised configuration file:
+```
+sudo kubectl apply -f k8s-config.yaml
+```
+
+To see if the pods and services created successfully:
+```
+sudo kubectl get all -o wide
+```
+
+To scale up or scale down the number of the pods in the deployment:
+```
+kubectl scale deployment iweblens-deployment --replicas=4
+```
+
+To delete the created deployment and service:
+```
+kubectl delete -f iweblens-deployment
+```
+
+To delete the cluster:
 ```
 sudo kind delete cluster
 ```
