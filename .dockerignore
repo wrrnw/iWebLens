@@ -1,5 +1,6 @@
-given_resources/
+private_resources/
 README.md
 .gitignore
+iWebLens_client.py
 k8s-config.yaml
 kind-config.yaml
