@@ -117,7 +117,7 @@ def do_prediction(image,net,LABELS):
             objects[i]["rectangle"] = {}
             objects[i]["rectangle"]["height"] = boxes[i][3]
             objects[i]["rectangle"]["left"] = boxes[i][0]
-            objects[i]["rectangle"]["top"] = boxes[i][1] + boxes[i][3]
+            objects[i]["rectangle"]["top"] = boxes[i][1]
             objects[i]["rectangle"]["width"] = boxes[i][2]
             objects_arr.append(objects[i])
     return objects_arr
