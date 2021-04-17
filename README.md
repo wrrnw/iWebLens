@@ -133,7 +133,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 
 Check if it is installed successfully:
 ```
-sudo kubectl version --client
+kubectl version --client
 ```
 
 Create a cluster with pre-built node image:
