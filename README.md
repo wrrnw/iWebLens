@@ -16,10 +16,10 @@ pip3 install -r requirements.txt
 
 <!-- Test detection with a sample image, make sure you are in the project folder and run:
 ```
-python3 given_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
+python3 private_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
 ``` -->
 
-To setup a server:
+To start a server:
 ```
 python3 iWebLens_server.py
 ```
@@ -58,12 +58,12 @@ pip3 install --upgrade pip
 pip3 install -r requirements.txt
 ```
 
-Test detection with a sample image, make sure you are in the project folder and run:
+<!-- Test detection with a sample image, make sure you are in the project folder and run:
 ```
-python3 given_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
-```
+python3 private_resources/object_detection.py yolo_tiny_configs/ inputfolder/000000473528.jpg 
+``` -->
 
-To setup a server:
+To start a server:
 ```
 python3 iWebLens_server.py
 ```
@@ -110,7 +110,7 @@ python3 iWebLens_client.py inputfolder/ http://0.0.0.0:5000/api/object_detection
 ```
 
 ---
-### Install kind and kubectl into Ubuntu 18.04
+### Install kind and kubectl into Ubuntu 18.04 and deploy
 Install kind and put it into the $PATH
 ```
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
@@ -136,7 +136,7 @@ Check if it is installed successfully:
 kubectl version --client
 ```
 
-Create a cluster with pre-built node image and customised configuration file:
+Make sure you are in the same folder as kind-config.yaml file and k8s-config.yaml file. Create a cluster with pre-built node image and customised configuration file:
 ```
 sudo kind create cluster --config kind-config.yaml
 ```
@@ -165,7 +165,6 @@ If you wanna deploy the application into cloud and access externally (for exampl
 ```
 python3 iWebLens_client.py inputfolder/ http://<instance ip>:30000/api/object_detection 16
 ```
-
 
 To delete the created deployment and service:
 ```

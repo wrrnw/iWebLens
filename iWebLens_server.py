@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask.json import jsonify
 from flask_restful import Api
 import json
 import numpy as np
@@ -150,10 +151,8 @@ def main():
         image_id = json.loads(request.json)['id']
 
         # format and return the result
-        result = {}
-        result["id"] = image_id
-        result["objects"] = object_arr
-        return "\n" + json.dumps(result, indent=4)
+        return jsonify(id=image_id, objects=object_arr)
+
 
     except Exception as e:
         print("Exception  {}".format(e))
