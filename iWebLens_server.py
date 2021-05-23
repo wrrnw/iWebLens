@@ -1,18 +1,8 @@
-from flask import Flask, request
-from flask.json import jsonify
-from flask_restful import Api
-import json
 import numpy as np
-import sys
 import time
 import cv2
 import os
 import base64
-
-
-app = Flask(__name__)
-api = Api(app)
-app.config["JSON_SORT_KEYS"] = False
 
 # construct the argument parse and parse the arguments
 confthres = 0.3
@@ -114,9 +104,7 @@ def do_prediction(image,net,LABELS):
             objects_arr.append(LABELS[classIDs[i]])
     return objects_arr
 
-
-
-def main(image_path):
+def do_object_detection(image_path):
     try:
         ## Yolov3-tiny versrion
         labelsPath= "coco.names"
@@ -149,4 +137,4 @@ def main(image_path):
         print("Exception  {}".format(e))
 
 if __name__ == "__main__":
-    main('inputfolder/000000334339.jpg')
+    do_object_detection('inputfolder/000000334339.jpg')
