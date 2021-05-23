@@ -106,26 +106,17 @@ def do_prediction(image,net,LABELS):
     # apply non-maxima suppression to suppress weak, overlapping bounding boxes
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, confthres, nmsthres)
 
-    objects = {}
     objects_arr = []
     # ensure at least one detection exists. if not, the object array will be empty
     if len(idxs) > 0:
         # loop over the indexes we are keeping
         for i in idxs.flatten():
-            objects[i] = {}
-            objects[i]["label"] = LABELS[classIDs[i]]
-            objects[i]["accuracy"] = confidences[i]
-            objects[i]["rectangle"] = {}
-            objects[i]["rectangle"]["height"] = boxes[i][3]
-            objects[i]["rectangle"]["left"] = boxes[i][0]
-            objects[i]["rectangle"]["top"] = boxes[i][1]
-            objects[i]["rectangle"]["width"] = boxes[i][2]
-            objects_arr.append(objects[i])
+            objects_arr.append(LABELS[classIDs[i]])
     return objects_arr
 
 
-@app.route('/api/object_detection', methods=['POST'])
-def main():
+
+def main(image_path):
     try:
         ## Yolov3-tiny versrion
         labelsPath= "coco.names"
@@ -136,26 +127,26 @@ def main():
         CFG=get_config(cfgpath)
         Weights=get_weights(wpath)
 
-        # Decode the base64 image file
-        base64_imagefile = json.loads(request.json)['image']
+        # Encode and decode the base64 image file
+        # image_path = 'inputfolder/000000334339.jpg'
+        with open (image_path, 'rb') as image_file:
+            base64_imagefile =  base64.b64encode(image_file.read()).decode('utf-8')
         base64_img_bytes = base64_imagefile.encode('utf-8')
         decoded_imagefile_data = base64.decodebytes(base64_img_bytes)
         nparr = np.fromstring(decoded_imagefile_data, np.uint8) 
         npimg = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         image = npimg.copy()
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        
+       
         # load the neural net. Should be local to this method as its multi-threaded endpoint
         nets = load_model(CFG, Weights)
         object_arr = do_prediction(image, nets, Lables)
-        image_id = json.loads(request.json)['id']
 
         # format and return the result
-        return jsonify(id=image_id, objects=object_arr)
-
+        print (object_arr)
 
     except Exception as e:
         print("Exception  {}".format(e))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5000, threaded=True)
+    main('inputfolder/000000334339.jpg')
